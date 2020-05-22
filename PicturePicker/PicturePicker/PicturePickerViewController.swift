@@ -10,8 +10,15 @@ import UIKit
 
 private let PicturePickerCellID = "Cell"
 
+// 最大选择照片数量
+private let PicturePickerMaxCount = 8
+
 class PicturePickerViewController: UICollectionViewController {
 
+    private var selectedIndex = 0
+    
+    lazy var pictures = [UIImage]()
+    
     init() {
         super.init(collectionViewLayout: PicturePickerLayout())
     }
@@ -54,15 +61,15 @@ class PicturePickerViewController: UICollectionViewController {
 // MARK: - UICollectionView 数据源方法
 extension PicturePickerViewController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        return 10
+        // 保证末尾有一个加号按钮, 同时保证「选择的照片数量」达到上限后，不再允许用户添加
+        return pictures.count + (pictures.count == PicturePickerMaxCount ? 0 : 1)
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PicturePickerCellID, for: indexPath) as! PicturePickerCell
     
         // Configure the cell
-        cell.backgroundColor = .red
+        cell.image = indexPath.item >= pictures.count ? nil : pictures[indexPath.item]
         cell.pictureCellDelegate = self
         
         return cell
@@ -71,16 +78,61 @@ extension PicturePickerViewController {
 }
 
 // 如果协议中的方法是私有的，那么实现协议方法的时候，函数也要声明为 fileprivate
+// MARK: - 添加、删除照片代理方法
 extension PicturePickerViewController: PicturePickerCellDelegate {
     fileprivate func picturePickerCellDidAdd(cell: PicturePickerCell) {
         print("添加照片")
+        // 判断是否允许访问相册
+        if !UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            print("无法访问照片库")
+            return
+        }
+        
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        // 记录当前用户选择的照片索引
+        selectedIndex = collectionView.indexPath(for: cell)?.item ?? 0
+        present(picker, animated: true, completion: nil)
     }
     
     fileprivate func picturePickerCellDidRemove(cell: PicturePickerCell) {
         print("删除照片")
+        let indexPath = collectionView.indexPath(for: cell)!
+        if indexPath.item >= pictures.count {
+            return
+        }
+        
+        // 删除数据
+        pictures.remove(at: indexPath.item)
+        // 动画删除视图
+        collectionView.deleteItems(at: [indexPath])
     }
     
 }
+
+// MARK: - 从系统相册选择图片的代理方法
+extension PicturePickerViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    // 一旦实现代理方法，必须自己 dismiss
+    /*
+     picker.allowsEditing = true, 适用于头像选择  UIImagePickerControllerEditedImage
+     */
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        let image = info[UIImagePickerController.InfoKey(rawValue: "UIImagePickerControllerOriginalImage")] as! UIImage
+        let scaleImage = image.scaleToWith(width: 600)
+        
+        if selectedIndex >= pictures.count {
+            pictures.append(scaleImage)
+        } else {
+            pictures[selectedIndex] = scaleImage
+        }
+        collectionView.reloadData()
+        // 释放控制器
+        dismiss(animated: true, completion: nil)
+        
+    }
+}
+
+
 /*
  如果协议中包含 optional 的函数，协议需要使用 @objc 修饰
  */
@@ -94,7 +146,13 @@ private protocol PicturePickerCellDelegate {
 private class PicturePickerCell: UICollectionViewCell {
     
     weak var pictureCellDelegate: PicturePickerCellDelegate?
-    
+    var image: UIImage? {
+        didSet {
+            addButton.setImage(image ?? UIImage(named: "compose_pic_add"), for: .normal)
+            // 当没有照片显示时，隐藏「删除按钮」
+            removeButton.isHidden = image == nil
+        }
+    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -134,6 +192,9 @@ private class PicturePickerCell: UICollectionViewCell {
         // 设置监听方法
         addButton.addTarget(self, action: #selector(addPicture), for: .touchUpInside)
         removeButton.addTarget(self, action: #selector(removePicture), for: .touchUpInside)
+        
+        // 设置图像填充模式，方式添加的图像变形
+        addButton.imageView?.contentMode = .scaleAspectFill
     }
     
     // MARK: - 懒加载控件

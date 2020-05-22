@@ -52,6 +52,7 @@
 		6620ABFF2476B9A500FFBB60 /* ConstraintDirectionalInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6620ABDB2476B9A500FFBB60 /* ConstraintDirectionalInsets.swift */; };
 		6620AC002476B9A500FFBB60 /* ConstraintLayoutSupportDSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6620ABDC2476B9A500FFBB60 /* ConstraintLayoutSupportDSL.swift */; };
 		6620AC012476B9A500FFBB60 /* ConstraintMakerRelatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6620ABDD2476B9A500FFBB60 /* ConstraintMakerRelatable.swift */; };
+		66D015B1247809770082CAE6 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D015B0247809770082CAE6 /* UIImage+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -102,6 +103,7 @@
 		6620ABDB2476B9A500FFBB60 /* ConstraintDirectionalInsets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintDirectionalInsets.swift; sourceTree = "<group>"; };
 		6620ABDC2476B9A500FFBB60 /* ConstraintLayoutSupportDSL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintLayoutSupportDSL.swift; sourceTree = "<group>"; };
 		6620ABDD2476B9A500FFBB60 /* ConstraintMakerRelatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstraintMakerRelatable.swift; sourceTree = "<group>"; };
+		66D015B0247809770082CAE6 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +163,7 @@
 				6620ABB22476B97700FFBB60 /* UILabel+Extension.swift */,
 				6620ABB32476B97700FFBB60 /* UIButton+Extension.swift */,
 				6620ABB42476B97700FFBB60 /* UIBarButtonItem+Extension.swift */,
+				66D015B0247809770082CAE6 /* UIImage+Extension.swift */,
 			);
 			name = extension;
 			path = ../../Weibo/Weibo/Classes/Tools/extension;
@@ -311,6 +314,7 @@
 				6620ABEE2476B9A500FFBB60 /* ConstraintView.swift in Sources */,
 				6620ABFD2476B9A500FFBB60 /* LayoutConstraint.swift in Sources */,
 				6620ABE92476B9A500FFBB60 /* ConstraintPriority.swift in Sources */,
+				66D015B1247809770082CAE6 /* UIImage+Extension.swift in Sources */,
 				6620ABF62476B9A500FFBB60 /* ConstraintRelation.swift in Sources */,
 				6620ABF42476B9A500FFBB60 /* ConstraintMakerEditable.swift in Sources */,
 				6620ABF82476B9A500FFBB60 /* ConstraintView+Extensions.swift in Sources */,
